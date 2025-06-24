@@ -1,6 +1,9 @@
 package com.example.parkeerapp;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +12,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class LoginActivity extends AppCompatActivity {
+
+    TextView txvLinkSignUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,5 +25,20 @@ public class LoginActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        txvLinkSignUp = findViewById(R.id.txvLinkSignUp);
+
+        txvLinkSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toSignUp();
+            }
+        });
+
+    }
+
+    public void toSignUp(){
+        Intent intent = new Intent(this,SignupActivity.class);
+        startActivity(intent);
     }
 }
