@@ -3,6 +3,7 @@ package com.example.parkeerapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -14,6 +15,7 @@ import androidx.core.view.WindowInsetsCompat;
 public class LoginActivity extends AppCompatActivity {
 
     TextView txvLinkSignUp;
+    Button btnLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,10 +37,24 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        btnLogin =findViewById(R.id.btnLogin);
+
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toMain();
+            }
+        });
+
     }
 
     public void toSignUp(){
         Intent intent = new Intent(this,SignupActivity.class);
+        startActivity(intent);
+    }
+
+    public void toMain(){
+        Intent intent = new Intent(this,MainActivity.class);
         startActivity(intent);
     }
 }
