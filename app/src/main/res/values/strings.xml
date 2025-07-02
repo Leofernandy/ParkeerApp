@@ -2,4 +2,9 @@
     <string name="app_name">ParkeerApp</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="plate_array">
+        <item>BK 1234 ABC</item>
+        <item>BK 8888 AAA</item>
+    </string-array>
 </resources>

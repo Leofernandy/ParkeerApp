@@ -11,7 +11,7 @@
         android:id="@+id/imvElips"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="67dp"
+        android:layout_marginTop="80dp"
         android:src="@drawable/elips" />
 
     <LinearLayout
@@ -23,8 +23,8 @@
 
         <ImageView
             android:id="@+id/imvLogodanNama"
-            android:layout_width="55dp"
-            android:layout_height="13dp"
+            android:layout_width="57dp"
+            android:layout_height="15dp"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="21dp"
             android:src="@drawable/iconandnama" />
@@ -50,29 +50,31 @@
                     android:layout_weight="1"
                     android:textColor="@color/white"
                     android:textStyle="bold"
-                    android:textSize="15dp"
+                    android:textSize="16dp"
                     android:text="Hi Stanley" />
 
                 <LinearLayout
-                    android:layout_width="65dp"
-                    android:layout_height="20dp"
+                    android:layout_width="79dp"
+                    android:layout_height="match_parent"
                     android:background="@drawable/rounded_kecil"
                     android:orientation="horizontal">
+
                     <ImageView
                         android:layout_width="10dp"
                         android:layout_height="10dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginHorizontal="3dp"
                         android:src="@drawable/star"></ImageView>
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="1dp"
                         android:layout_gravity="center_vertical"
-                        android:textStyle="bold"
+                        android:layout_marginHorizontal="1dp"
+                        android:text="Point: 120"
                         android:textColor="@color/navy"
-                        android:textSize="9dp"
-                        android:text="Point : 120"></TextView>
+                        android:textSize="12dp"
+                        android:textStyle="bold"></TextView>
                 </LinearLayout>
             </LinearLayout>
 
@@ -83,7 +85,7 @@
                 android:layout_marginLeft="21dp"
                 android:layout_marginRight="21dp"
                 android:layout_marginTop="4dp"
-                android:layout_marginBottom="14dp"
+                android:layout_marginBottom="20dp"
                 android:textColor="@color/white"
                 android:textSize="10dp"
                 android:text="Where are you going today?" />
@@ -95,7 +97,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="87dp"
         android:orientation="vertical"
         android:paddingTop="10dp">
 
@@ -273,6 +275,7 @@
                                 android:textSize="14dp"></TextView>
 
                             <ImageView
+                                android:id="@+id/btnParkHere"
                                 android:layout_width="68dp"
                                 android:layout_height="17dp"
                                 android:layout_marginTop="35dp"

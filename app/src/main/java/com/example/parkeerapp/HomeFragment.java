@@ -1,5 +1,6 @@
 package com.example.parkeerapp;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -11,6 +12,8 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -28,6 +31,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap gMap;
+    ImageView btnParkHere;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -69,6 +73,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
     }
 
     @Override
@@ -91,6 +97,15 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        btnParkHere = view.findViewById(R.id.btnParkHere);
+
+        btnParkHere.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toBook();
+            }
+        });
         // Tambahkan SupportMapFragment ke dalam FrameLayout
         SupportMapFragment mapFragment = new SupportMapFragment();
         getChildFragmentManager()
@@ -105,6 +120,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             requireActivity().getWindow().setStatusBarColor(
                     ContextCompat.getColor(requireContext(), R.color.navy)  // warna sesuai keinginanmu
             );
+        }
+    }
+
+    public void toBook(){
+        if (getActivity() != null) {
+            Intent intent = new Intent(getActivity(), BookActivity.class);
+            startActivity(intent);
         }
     }
 }
