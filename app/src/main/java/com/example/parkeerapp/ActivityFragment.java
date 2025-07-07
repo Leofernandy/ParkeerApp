@@ -7,10 +7,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.example.parkeerapp.ViewPagerAdapter;
+
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,6 +25,9 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class ActivityFragment extends Fragment {
+
+    private TabLayout tabLayout;
+    private ViewPager2 viewPager;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -62,8 +72,45 @@ public class ActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_activity, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_activity, container, false);
+        tabLayout = view.findViewById(R.id.tabLayout);
+        viewPager = view.findViewById(R.id.viewPager);
+
+        ViewPagerAdapter adapter = new ViewPagerAdapter(requireActivity());
+        viewPager.setAdapter(adapter);
+
+        TextView tvTabTitle = view.findViewById(R.id.tvTabTitle);
+
+        new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
+            if (position == 0) {
+                tab.setText("Activity");
+            } else if (position == 1) {
+                tab.setText("History");
+            }
+        }).attach();
+
+// Listener tab untuk ubah judul di atas tab
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if (tab.getPosition() == 0) {
+                    tvTabTitle.setText("Activity");
+                } else if (tab.getPosition() == 1) {
+                    tvTabTitle.setText("History");
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {}
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {}
+        });
+
+        return view;
+
+
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.example.parkeerapp;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -11,6 +12,8 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,6 +21,9 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class ProfileFragment extends Fragment {
+
+    ImageView imvEditProfile;
+    LinearLayout llyMyVehicles;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -70,10 +76,44 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        imvEditProfile = view.findViewById(R.id.imvEditProfile);
+
+        imvEditProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toEditProfile();
+            }
+        });
+
+        llyMyVehicles = view.findViewById(R.id.llyMyVehicles);
+
+        llyMyVehicles.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toMyVehicles();
+            }
+        });
+
+
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             requireActivity().getWindow().setStatusBarColor(
                     ContextCompat.getColor(requireContext(), R.color.white) // warna default kamu
             );
         }
     }
+    public void toEditProfile(){
+        if (getActivity() != null) {
+            Intent intent = new Intent(getActivity(), edit_profile.class);
+            startActivity(intent);
+        }
+    }
+
+    public void toMyVehicles(){
+        if (getActivity() != null) {
+            Intent intent = new Intent(getActivity(), MyVehiclesActivity.class);
+            startActivity(intent);
+        }
+    }
+
 }
