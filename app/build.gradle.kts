@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
 }
+apply(plugin = "realm-android")
 
 android {
     namespace = "com.example.parkeerapp"
@@ -47,4 +48,5 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation("com.google.android.gms:play-services-maps:18.2.0")
+    implementation("io.realm:realm-android-library:10.15.1")
 }

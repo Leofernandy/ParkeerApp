@@ -53,6 +53,7 @@
                         android:textColor="@color/black"></TextView>
 
                     <ImageView
+                        android:id="@+id/imvTopup"
                         android:layout_width="19dp"
                         android:layout_height="5dp"
                         android:layout_marginLeft="170dp"
@@ -66,11 +67,13 @@
                     android:orientation="horizontal">
 
                     <ImageView
+                        android:id="@+id/imvDana"
                         android:layout_width="76dp"
                         android:layout_height="24dp"
                         android:src="@drawable/dana"/>
 
                     <TextView
+                        android:id="@+id/txvSaldo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/black"
@@ -86,6 +89,7 @@
                     android:layout_marginTop="8dp"
                     android:orientation="horizontal">
                     <TextView
+                        android:id="@+id/txvPhone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="11dp"
@@ -126,6 +130,7 @@
                     android:src="@drawable/ovo"/>
 
                 <TextView
+                    android:id="@+id/txvPhone1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="3dp"

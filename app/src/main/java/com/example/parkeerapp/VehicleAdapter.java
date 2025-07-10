@@ -1,4 +1,4 @@
-package com.example.parkeerapp;
+package com.example.parkeerapp.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,28 +6,33 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.ImageView;
+
+import com.example.parkeerapp.EditVehicleActivity;
+import com.example.parkeerapp.R;
+import com.example.parkeerapp.model.Vehicle;
 
 import java.util.List;
 
 public class VehicleAdapter extends BaseAdapter {
-    private Context context;
-    private List<String> dummyList;
 
-    public VehicleAdapter(Context context, List<String> dummyList) {
+    private Context context;
+    private List<Vehicle> vehicleList;
+
+    public VehicleAdapter(Context context, List<Vehicle> vehicleList) {
         this.context = context;
-        this.dummyList = dummyList;
+        this.vehicleList = vehicleList;
     }
 
     @Override
     public int getCount() {
-        return dummyList.size();
+        return vehicleList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return dummyList.get(position);
+        return vehicleList.get(position);
     }
 
     @Override
@@ -36,45 +41,54 @@ public class VehicleAdapter extends BaseAdapter {
     }
 
     static class ViewHolder {
+        TextView textPlate, textCarName, textColor;
         ImageView imageVehicle;
-        TextView textPlate, textCarName, textColor, txvEditVehicle, textDefault;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
+
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.layout_item_vehicles, parent, false);
             holder = new ViewHolder();
-            holder.imageVehicle = convertView.findViewById(R.id.imageVehicle);
             holder.textPlate = convertView.findViewById(R.id.textPlate);
             holder.textCarName = convertView.findViewById(R.id.textCarName);
             holder.textColor = convertView.findViewById(R.id.textColor);
-            holder.txvEditVehicle = convertView.findViewById(R.id.txvEditVehicle);  // Pastikan ID-nya benar
-            holder.textDefault = convertView.findViewById(R.id.textDefault);
+            holder.imageVehicle = convertView.findViewById(R.id.imageVehicle);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        // Set dummy data
-        String plateNumber = dummyList.get(position);
-        holder.textPlate.setText(plateNumber);
-        holder.textCarName.setText("Toyota Agya");
-        holder.textColor.setText("Black");
-        holder.imageVehicle.setImageResource(R.drawable.agya_black);
+        Vehicle vehicle = vehicleList.get(position);
+        holder.textPlate.setText(vehicle.getPlate());
+        holder.textCarName.setText(vehicle.getBrand() + " " + vehicle.getModel());
+        holder.textColor.setText(vehicle.getColor());
 
-        // Tambahkan click listener untuk tombol EDIT
-        holder.txvEditVehicle.setOnClickListener(v -> {
+        // Ambil nama drawable dari kombinasi model + color
+        String model = vehicle.getModel().toLowerCase();
+        String color = vehicle.getColor().toLowerCase();
+        String drawableName = model + "_" + color; // Contoh: agya_black, fortuner_white
+
+        int imageResId = context.getResources().getIdentifier(
+                drawableName,
+                "drawable",
+                context.getPackageName()
+        );
+
+        if (imageResId != 0) {
+            holder.imageVehicle.setImageResource(imageResId);
+        } else {
+            holder.imageVehicle.setImageResource(R.drawable.default_car); // fallback jika drawable tidak ditemukan
+        }
+
+        convertView.setOnClickListener(v -> {
             Intent intent = new Intent(context, EditVehicleActivity.class);
-            intent.putExtra("plate", plateNumber);
-            intent.putExtra("carName", "Toyota Agya");
-            intent.putExtra("color", "Black");
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // Tambahkan ini jika context bukan activity
+            intent.putExtra("plate", vehicle.getPlate());
             context.startActivity(intent);
         });
 
         return convertView;
     }
-
 }

@@ -58,7 +58,7 @@
             android:text="Create your account in seconds" />
 
         <EditText
-            android:id="@+id/edtNama"
+            android:id="@+id/edtFullname"
             android:layout_width="319dp"
             android:layout_height="55dp"
             android:layout_marginTop="19dp"

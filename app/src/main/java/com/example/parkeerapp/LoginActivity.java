@@ -2,59 +2,105 @@ package com.example.parkeerapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
+import android.util.Log;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import com.example.parkeerapp.utils.UserSessionManager;
+
+import com.example.parkeerapp.model.User;
+
+import io.realm.Realm;
 
 public class LoginActivity extends AppCompatActivity {
 
-    TextView txvLinkSignUp;
-    Button btnLogin;
+    private EditText edtEmail, edtPassword;
+    private Button btnLogin;
+    private TextView txvLinkSignUp;
+    private Realm realm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
+
+        // Inisialisasi Realm
+        realm = Realm.getDefaultInstance();
+
+        // View binding
+        edtEmail = findViewById(R.id.edtEmail);
+        edtPassword = findViewById(R.id.edtPassword);
+        btnLogin = findViewById(R.id.btnLogin);
+        txvLinkSignUp = findViewById(R.id.txvLinkSignUp);
+
+        // Aksi tombol login
+        btnLogin.setOnClickListener(v -> doLogin());
+
+        // Navigasi ke halaman signup
+        txvLinkSignUp.setOnClickListener(v -> toSignUp());
+
+        // Adjust padding jika ada status bar / gesture bar
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
-        txvLinkSignUp = findViewById(R.id.txvLinkSignUp);
-
-        txvLinkSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toSignUp();
-            }
-        });
-
-        btnLogin =findViewById(R.id.btnLogin);
-
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toMain();
-            }
-        });
-
     }
 
-    public void toSignUp(){
-        Intent intent = new Intent(this,SignupActivity.class);
-        startActivity(intent);
+    private void doLogin() {
+        String email = edtEmail.getText().toString().trim();
+        String password = edtPassword.getText().toString().trim();
+
+        if (email.isEmpty() || password.isEmpty()) {
+            Toast.makeText(this, "Email dan password tidak boleh kosong", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        User user = realm.where(User.class)
+                .equalTo("email", email)
+                .equalTo("password", password)
+                .findFirst();
+
+
+
+        if (user != null) {
+            Log.d("DEBUG", "User login: " + user.getEmail());
+
+            // Simpan data user ke SharedPreferences
+            UserSessionManager session = new UserSessionManager(this);
+            session.createLoginSession(
+                    user.getEmail(),
+                    user.getFullname(),
+                    user.getPhone(),
+                    user.getPassword()
+            );
+
+            Toast.makeText(this, "Login berhasil", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            finish();
+        }
+        else {
+            Toast.makeText(this, "Email atau password salah", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    public void toMain(){
-        Intent intent = new Intent(this,MainActivity.class);
-        startActivity(intent);
+    private void toSignUp() {
+        startActivity(new Intent(this, SignupActivity.class));
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (realm != null && !realm.isClosed()) {
+            realm.close();
+        }
     }
 }

@@ -30,82 +30,70 @@
             app:cardCornerRadius="8dp"
             app:cardElevation="6dp">
 
-            <LinearLayout
-                android:layout_width="369dp"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingLeft="15dp"
-                android:paddingTop="15dp"
-                android:paddingRight="15dp"
-                android:paddingBottom="15dp">
+                android:padding="15dp">
 
+                <!-- Foto Profil -->
                 <ImageView
+                    android:id="@+id/imageProfile"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/pp_nad" />
+                    android:src="@drawable/pp_default"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" />
 
+                <!-- Text info -->
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:id="@+id/infoContainer"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:layout_marginStart="15dp"
+                    app:layout_constraintStart_toEndOf="@id/imageProfile"
+                    app:layout_constraintTop_toTopOf="@id/imageProfile"
+                    app:layout_constraintBottom_toBottomOf="@id/imageProfile"
+                    app:layout_constraintEnd_toStartOf="@id/imvEditProfile"
+                    app:layout_constraintHorizontal_bias="0.0">
 
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/txvFullname"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:text="Stanley"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
 
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Stanley"
-                            android:textColor="@color/black"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/txvPhone"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:orientation="horizontal">
+                        android:text="085377658876"
+                        android:textSize="11sp"
+                        android:layout_marginTop="4dp" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="62******7890"
-                            android:textSize="11dp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/txvEmail"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Stanley123@gmail.com"
-                            android:textSize="11dp" />
-                    </LinearLayout>
-
+                        android:text="Stanley123@gmail.com"
+                        android:textSize="11sp"
+                        android:layout_marginTop="4dp" />
                 </LinearLayout>
 
+                <!-- Tombol Edit -->
                 <ImageView
                     android:id="@+id/imvEditProfile"
                     android:layout_width="75dp"
                     android:layout_height="17dp"
-                    android:layout_marginStart="70dp"
-                    android:layout_marginTop="1dp"
-                    android:src="@drawable/edit_profile_button" />
+                    android:src="@drawable/edit_profile_button"
+                    app:layout_constraintTop_toTopOf="@id/imageProfile"
+                    app:layout_constraintEnd_toEndOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-            </LinearLayout>
 
 
         </androidx.cardview.widget.CardView>
@@ -317,6 +305,7 @@
             android:background="#CCCCCC" />
 
         <LinearLayout
+            android:id="@+id/llyLogout"
             android:layout_width="367dp"
             android:layout_height="50dp"
             android:layout_gravity="center_horizontal"

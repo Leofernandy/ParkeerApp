@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import com.example.parkeerapp.utils.UserSessionManager;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,7 +25,9 @@ import android.widget.LinearLayout;
 public class ProfileFragment extends Fragment {
 
     ImageView imvEditProfile;
-    LinearLayout llyMyVehicles;
+    LinearLayout llyMyVehicles, llyLogout;
+
+    TextView txvFullname, txvEmail, txvPhone;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -77,6 +81,28 @@ public class ProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         imvEditProfile = view.findViewById(R.id.imvEditProfile);
+        llyMyVehicles = view.findViewById(R.id.llyMyVehicles);
+        llyLogout = view.findViewById(R.id.llyLogout);
+        txvFullname = view.findViewById(R.id.txvFullname);
+        txvEmail = view.findViewById(R.id.txvEmail);
+        txvPhone = view.findViewById(R.id.txvPhone);
+
+
+
+        loadProfileData();
+        llyLogout.setOnClickListener(v -> logout());
+
+
+
+        // Ambil data dari SharedPreferences
+        UserSessionManager session = new UserSessionManager(requireContext());
+        if (session.isLoggedIn()) {
+            txvFullname.setText(session.getFullname());
+            txvEmail.setText(session.getEmail());
+            txvPhone.setText(session.getPhone());
+        }
+
+
 
         imvEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,7 +111,6 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        llyMyVehicles = view.findViewById(R.id.llyMyVehicles);
 
         llyMyVehicles.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,5 +140,33 @@ public class ProfileFragment extends Fragment {
             startActivity(intent);
         }
     }
+
+    private void loadProfileData() {
+        UserSessionManager session = new UserSessionManager(requireContext());
+        if (session.isLoggedIn()) {
+            txvFullname.setText(session.getFullname());
+            txvEmail.setText(session.getEmail());
+            txvPhone.setText(session.getPhone());
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // refresh data saat kembali dari edit_profile
+        loadProfileData();
+    }
+
+    private void logout() {
+        UserSessionManager session = new UserSessionManager(requireContext());
+        session.clearSession();
+
+        Intent intent = new Intent(requireActivity(), LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        requireActivity().finishAffinity(); // Tutup semua aktivitas
+    }
+
+
 
 }

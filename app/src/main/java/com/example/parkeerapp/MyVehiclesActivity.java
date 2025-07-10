@@ -3,7 +3,9 @@ package com.example.parkeerapp;
 import static android.app.PendingIntent.getActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -16,13 +18,20 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.parkeerapp.model.Vehicle;
+import com.example.parkeerapp.utils.UserSessionManager;
+
 import java.util.Arrays;
 import java.util.List;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
+
 public class MyVehiclesActivity extends AppCompatActivity {
 
-    ImageView btnAdd;
+    ImageView btnAdd, imvLeftArrow;
     TextView txvEditVehicle;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +43,8 @@ public class MyVehiclesActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        imvLeftArrow= findViewById(R.id.imvLeftArrow);
+        imvLeftArrow.setOnClickListener(v -> finish());
 
 
         btnAdd = findViewById(R.id.btnAdd);
@@ -43,22 +54,67 @@ public class MyVehiclesActivity extends AppCompatActivity {
                 toAddVehicles();
             }
         });
+        loadVehicleList();
 
         ListView listView = findViewById(R.id.listVehicles);
 
-        List<String> dummyVehicles = Arrays.asList(
-                "BK 1234 ABC",
-                "BK 5678 DEF",
-                "BK 9999 XYZ"
-        );
+        Realm realm = Realm.getDefaultInstance();
 
-        VehicleAdapter adapter = new VehicleAdapter(this, dummyVehicles);
-        listView.setAdapter(adapter);}
+        UserSessionManager session = new UserSessionManager(this);
+        String email = session.getEmail();
+        Log.d("SESSION", "Email dari session: " + email);
+
+        realm.executeTransaction(r -> {
+            realm.where(Vehicle.class)
+                    .isNull("ownerEmail")
+                    .or()
+                    .equalTo("ownerEmail", "")
+                    .findAll()
+                    .deleteAllFromRealm();
+        });
+
+        RealmResults<Vehicle> vehicles = realm.where(Vehicle.class)
+                .equalTo("ownerEmail", email)
+                .findAll();
 
 
+        List<Vehicle> filteredList = realm.copyFromRealm(vehicles);
 
-    public void toAddVehicles(){
+        System.out.println("DEBUG_VEHICLE_COUNT: " + filteredList.size());
+
+        com.example.parkeerapp.adapter.VehicleAdapter adapter = new com.example.parkeerapp.adapter.VehicleAdapter(this, filteredList);
+        listView.setAdapter(adapter);
+
+
+    }
+
+        public void toAddVehicles(){
         Intent intent = new Intent(this, AddVehicleActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadVehicleList();
+    }
+
+    private void loadVehicleList() {
+        Realm realm = Realm.getDefaultInstance();
+
+        UserSessionManager session = new UserSessionManager(this);
+        String email = session.getEmail();
+
+        RealmResults<Vehicle> vehicles = realm.where(Vehicle.class)
+                .equalTo("ownerEmail", email)
+                .findAll();
+
+        List<Vehicle> filteredList = realm.copyFromRealm(vehicles);
+
+        com.example.parkeerapp.adapter.VehicleAdapter adapter = new com.example.parkeerapp.adapter.VehicleAdapter(this, filteredList);
+        ListView listView = findViewById(R.id.listVehicles);
+        listView.setAdapter(adapter);
+
+        System.out.println("DEBUG_REFRESH_VEHICLE_COUNT: " + filteredList.size());
     }
 }
