@@ -2,20 +2,16 @@ package com.example.parkeerapp;
 
 import android.os.Build;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.example.parkeerapp.ViewPagerAdapter;
-
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -90,7 +86,6 @@ public class ActivityFragment extends Fragment {
             }
         }).attach();
 
-// Listener tab untuk ubah judul di atas tab
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -119,7 +114,7 @@ public class ActivityFragment extends Fragment {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             requireActivity().getWindow().setStatusBarColor(
-                    ContextCompat.getColor(requireContext(), R.color.white) // warna default kamu
+                    ContextCompat.getColor(requireContext(), R.color.white)
             );
         }
     }

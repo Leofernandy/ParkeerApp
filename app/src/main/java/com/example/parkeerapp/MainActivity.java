@@ -1,6 +1,7 @@
 package com.example.parkeerapp;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -27,16 +28,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         Realm realm = Realm.getDefaultInstance();
-        Toast.makeText(this, "Realm Siap!", Toast.LENGTH_SHORT).show();
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Set default fragment
+        Intent intent = getIntent();
+        if (intent != null && "activity".equals(intent.getStringExtra("navigateTo"))) {
+            binding.bottomNavigationView.setSelectedItemId(R.id.nav_activity);
+        } else {
+            binding.bottomNavigationView.setSelectedItemId(R.id.home);
+        }
+
+
         replaceFragment(new HomeFragment());
 
-        // Bottom navigation logic
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
 
@@ -53,8 +58,6 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
-
-        // Optional: edge-to-edge handling
         EdgeToEdge.enable(this);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());

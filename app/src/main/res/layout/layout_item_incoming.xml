@@ -28,6 +28,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tvEnterAt"
                     android:text="ENTER AT 17:00"
                     android:textStyle="bold"
                     android:textColor="#333333"
@@ -36,6 +37,7 @@
                     android:layout_height="wrap_content" />
 
                 <TextView
+                    android:id="@+id/tvMallName"
                     android:text="Delipark Mall"
                     android:textSize="15sp"
                     android:textColor="#666666"
@@ -44,6 +46,7 @@
                     android:layout_marginTop="2dp" />
 
                 <TextView
+                    android:id="@+id/tvBookingDate"
                     android:text="TODAY, 17:00 - 22:00, 17 JUL 25"
                     android:textSize="13sp"
                     android:textColor="#888888"
@@ -60,6 +63,7 @@
                 android:gravity="end">
 
                 <TextView
+                    android:id="@+id/tvStatus"
                     android:text="RESERVED"
                     android:textStyle="bold"
                     android:textColor="#337DED"
@@ -70,6 +74,7 @@
                     android:layout_height="wrap_content" />
 
                 <TextView
+                    android:id="@+id/tvPlate"
                     android:text="BK 1234 ABC"
                     android:textSize="12sp"
                     android:textColor="#999999"
@@ -81,6 +86,7 @@
 
         <!-- Button -->
         <LinearLayout
+            android:id="@+id/viewBarcodeButton"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:orientation="horizontal"

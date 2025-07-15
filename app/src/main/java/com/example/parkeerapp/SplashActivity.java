@@ -16,9 +16,8 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash); // pastikan ini betul
+        setContentView(R.layout.activity_splash);
 
-        // Ambil ImageView dan animasi
         ImageView logo = findViewById(R.id.logoParkeer);
         if (logo != null) {
             logo.animate()
@@ -29,7 +28,6 @@ public class SplashActivity extends AppCompatActivity {
                         finish();
                     });
         } else {
-            // Untuk debug jika null
             Toast.makeText(this, "ImageView logoParkeer not found!", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, LoginActivity.class));
             finish();

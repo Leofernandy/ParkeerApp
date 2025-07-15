@@ -13,6 +13,8 @@ public class UserSessionManager {
     private static final String KEY_PHONE = "user_phone";
     private static final String KEY_PASSWORD = "user_password"; // Optional
     private static final String KEY_IS_LOGGED_IN = "is_logged_in";
+    private static final String KEY_SALDO = "user_saldo";
+
 
     SharedPreferences pref;
     SharedPreferences.Editor editor;
@@ -29,8 +31,6 @@ public class UserSessionManager {
         editor.putString(KEY_PASSWORD, password); // Optional
         editor.putBoolean(KEY_IS_LOGGED_IN, true);
         editor.apply();
-
-        Log.d("SESSION", "Menyimpan email: " + email);
     }
 
     public String getEmail() {
@@ -53,6 +53,15 @@ public class UserSessionManager {
         return pref.getBoolean(KEY_IS_LOGGED_IN, false);
     }
 
+    public void setSaldo(int saldo) {
+        editor.putInt(KEY_SALDO, saldo);
+        editor.apply();
+    }
+
+    public int getSaldo() {
+        return pref.getInt(KEY_SALDO, 0);
+    }
+
     public void clearSession() {
         SharedPreferences.Editor editor = pref.edit();
         editor.clear();
@@ -68,6 +77,29 @@ public class UserSessionManager {
         user.put(KEY_PASSWORD, pref.getString(KEY_PASSWORD, null));
         return user;
     }
+
+    public void syncSaldoFromWallet(Context context) {
+        String email = getEmail();
+        if (email == null) return;
+
+        SharedPreferences walletPrefs = context.getSharedPreferences("wallet_" + email, Context.MODE_PRIVATE);
+        int saldo = walletPrefs.getInt("balance", 0);
+
+        setSaldo(saldo); // simpan ke session
+    }
+
+    public void refundToWallet(Context context, int amount) {
+        String email = getEmail();
+        if (email == null) return;
+
+        SharedPreferences walletPrefs = context.getSharedPreferences("wallet_" + email, Context.MODE_PRIVATE);
+        int currentBalance = walletPrefs.getInt("balance", 0);
+        walletPrefs.edit().putInt("balance", currentBalance + amount).apply();
+
+        // Update session saldo juga biar sinkron
+        setSaldo(currentBalance + amount);
+    }
+
 
 
 }

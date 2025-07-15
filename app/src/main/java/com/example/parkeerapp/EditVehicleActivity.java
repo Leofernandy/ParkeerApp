@@ -36,7 +36,6 @@ public class EditVehicleActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Inisialisasi view
         edtPlate = findViewById(R.id.edtPlate);
         sprBrand = findViewById(R.id.sprBrand);
         sprModel = findViewById(R.id.sprModel);
@@ -46,16 +45,13 @@ public class EditVehicleActivity extends AppCompatActivity {
         txvDelete = findViewById(R.id.txvDeleteVehicle);
         ImageView imvLeftArrow = findViewById(R.id.imvLeftArrow);
 
-        // Tombol back
         imvLeftArrow.setOnClickListener(v -> finish());
 
-        // Setup spinner dengan hint
         sprBrand.setAdapter(createHintedAdapter(R.array.brand_array));
         sprModel.setAdapter(createHintedAdapter(R.array.model_array));
         sprYear.setAdapter(createHintedAdapter(R.array.year_array));
         sprColor.setAdapter(createHintedAdapter(R.array.color_array));
 
-        // Ambil data dari Realm
         realm = Realm.getDefaultInstance();
         String plate = getIntent().getStringExtra("plate");
         if (plate != null) {
@@ -65,7 +61,6 @@ public class EditVehicleActivity extends AppCompatActivity {
             }
         }
 
-        // Tombol simpan perubahan
         btnSave.setOnClickListener(v -> {
             realm.executeTransaction(r -> {
                 currentVehicle.setBrand(sprBrand.getSelectedItem().toString());
@@ -77,7 +72,6 @@ public class EditVehicleActivity extends AppCompatActivity {
             finish();
         });
 
-        // Tombol hapus kendaraan
         txvDelete.setOnClickListener(v -> {
             realm.executeTransaction(r -> {
                 currentVehicle.deleteFromRealm();
@@ -87,7 +81,6 @@ public class EditVehicleActivity extends AppCompatActivity {
         });
     }
 
-    // Fungsi bantu untuk isi form
     private void populateFields(Vehicle vehicle) {
         edtPlate.setText(vehicle.getPlate());
         edtPlate.setEnabled(false); // tidak bisa ubah plate
@@ -108,7 +101,6 @@ public class EditVehicleActivity extends AppCompatActivity {
         }
     }
 
-    // Adapter spinner hint
     private ArrayAdapter<CharSequence> createHintedAdapter(int arrayResId) {
         return new ArrayAdapter<CharSequence>(this, R.layout.spinner_item, getResources().getTextArray(arrayResId)) {
             @Override

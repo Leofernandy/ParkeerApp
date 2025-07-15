@@ -80,7 +80,7 @@ public class VehicleAdapter extends BaseAdapter {
         if (imageResId != 0) {
             holder.imageVehicle.setImageResource(imageResId);
         } else {
-            holder.imageVehicle.setImageResource(R.drawable.default_car); // fallback jika drawable tidak ditemukan
+            holder.imageVehicle.setImageResource(R.drawable.default_car);
         }
 
         convertView.setOnClickListener(v -> {

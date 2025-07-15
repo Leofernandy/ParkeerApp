@@ -10,8 +10,16 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.example.parkeerapp.model.Booking;
+import com.example.parkeerapp.model.SlotParkir;
+import com.example.parkeerapp.utils.DateTimeUtil;
+import com.example.parkeerapp.utils.UserSessionManager;
+
 import java.util.Arrays;
 import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -67,10 +75,100 @@ public class UpcomingFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_upcoming, container, false);
         listView = view.findViewById(R.id.listUpcoming);
 
-        List<String> dummyList = Arrays.asList("1", "2", "3");
-        UpcomingAdapter adapter = new UpcomingAdapter(requireContext(), dummyList);
+        Realm realm = Realm.getDefaultInstance();
+        UserSessionManager sessionManager = new UserSessionManager(requireContext());
+        String currentUserEmail = sessionManager.getEmail();
+
+        // Ambil semua booking user
+        RealmResults<Booking> allBookings = realm.where(Booking.class)
+                .equalTo("userEmail", currentUserEmail)
+                .findAll();
+
+        // Update expired status jika sudah lewat jamKeluar
+        realm.executeTransaction(r -> {
+            for (Booking b : allBookings) {
+                if (!b.isExpired()) {
+                    String keluar = b.getJamKeluar(); // format "yyyy-MM-dd HH:mm"
+                    if (DateTimeUtil.isExpired(keluar)) {
+                        b.setExpired(true); // update jadi expired
+
+                        SlotParkir slot = r.where(SlotParkir.class)
+                                .equalTo("slotId", b.getSlotId())
+                                .findFirst();
+                        if (slot != null) {
+                            slot.setBooked(false);
+                        }
+                    }
+                }
+            }
+        });
+
+        RealmResults<Booking> validBookings = realm.where(Booking.class)
+                .equalTo("userEmail", currentUserEmail)
+                .equalTo("expired", false)
+                .findAll();
+
+        List<Booking> bookingList = realm.copyFromRealm(validBookings);
+        UpcomingAdapter adapter = new UpcomingAdapter(requireContext(), bookingList);
         listView.setAdapter(adapter);
 
         return view;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadUpcoming();
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Realm.getDefaultInstance().close();
+    }
+
+    private void loadUpcoming() {
+        Realm realm = Realm.getDefaultInstance();
+        UserSessionManager sessionManager = new UserSessionManager(requireContext());
+        String currentUserEmail = sessionManager.getEmail();
+
+        RealmResults<Booking> allBookings = realm.where(Booking.class)
+                .equalTo("userEmail", currentUserEmail)
+                .findAll();
+
+        realm.executeTransaction(r -> {
+            for (Booking b : allBookings) {
+                if (!b.isExpired()) {
+                    String keluar = b.getJamKeluar();
+                    if (DateTimeUtil.isExpired(keluar)) {
+                        b.setExpired(true);
+
+                        SlotParkir slot = r.where(SlotParkir.class)
+                                .equalTo("slotId", b.getSlotId())
+                                .findFirst();
+                        if (slot != null) {
+                            slot.setBooked(false);
+                        }
+
+                    }
+
+
+                }
+            }
+        });
+
+        RealmResults<Booking> validBookings = realm.where(Booking.class)
+                .equalTo("userEmail", currentUserEmail)
+                .equalTo("expired", false)
+                .findAll();
+
+        List<Booking> bookingList = realm.copyFromRealm(validBookings);
+        UpcomingAdapter adapter = new UpcomingAdapter(requireContext(), bookingList);
+        listView.setAdapter(adapter);
+
+        realm.close();
+    }
+
+
 }

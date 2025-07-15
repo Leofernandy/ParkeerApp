@@ -15,12 +15,11 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        // Ganti sesuai fragment kamu
         switch (position) {
             case 0:
-                return new UpcomingFragment(); // kamu harus buat BookingFragment.java
+                return new UpcomingFragment();
             case 1:
-                return new HistoryFragment(); // kamu harus buat HistoryFragment.java
+                return new HistoryFragment();
             default:
                 return new UpcomingFragment();
         }
@@ -28,7 +27,7 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-        return 2; // jumlah tab/fragments
+        return 2;
     }
 }
 

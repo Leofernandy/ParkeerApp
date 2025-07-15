@@ -5,14 +5,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.parkeerapp.model.User;
 import com.example.parkeerapp.utils.UserSessionManager;
-
 import java.util.Objects;
-
 import io.realm.Realm;
 
 public class edit_profile extends AppCompatActivity {
@@ -28,29 +24,24 @@ public class edit_profile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
-        // Inisialisasi Realm & Session
         Realm.init(this);
         realm = Realm.getDefaultInstance();
         session = new UserSessionManager(this);
 
-        // Bind view
         edtFullname = findViewById(R.id.edtFullname);
         edtPhone = findViewById(R.id.edtPhone);
         edtEmail = findViewById(R.id.edtEmail);
         btnSaveProfile = findViewById(R.id.btnSaveProfile);
         imvLeftArrow = findViewById(R.id.imvLeftArrow);
 
-        // Tampilkan data dari SharedPreferences
         if (session.isLoggedIn()) {
             edtFullname.setText(session.getFullname());
             edtPhone.setText(session.getPhone());
             edtEmail.setText(session.getEmail());
         }
 
-        // Simpan data saat tombol Save diklik
         btnSaveProfile.setOnClickListener(v -> saveProfile());
 
-        // Tombol back
         imvLeftArrow.setOnClickListener(v -> finish());
     }
 

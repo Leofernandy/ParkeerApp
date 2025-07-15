@@ -54,25 +54,21 @@ public class SignupActivity extends AppCompatActivity {
             String phone = edtPhone.getText().toString().trim();
             String password = edtPassword.getText().toString().trim();
 
-            // Validasi kosong
             if (fullname.isEmpty() || email.isEmpty() || phone.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "Semua field harus diisi", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // Validasi format email
             if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                 Toast.makeText(this, "Format email tidak valid", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // Validasi password minimal 6 karakter
             if (password.length() < 6) {
                 Toast.makeText(this, "Password minimal 6 karakter", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // Validasi nomor HP harus angka dan panjang 10–15 digit
             if (!phone.matches("[0-9]{10,15}")) {
                 Toast.makeText(this, "Nomor HP harus 10–15 digit angka", Toast.LENGTH_SHORT).show();
                 return;
@@ -83,14 +79,12 @@ public class SignupActivity extends AppCompatActivity {
                 return;
             }
 
-            // Cek email sudah dipakai atau belum
             User existing = realm.where(User.class).equalTo("email", email).findFirst();
             if (existing != null) {
                 Toast.makeText(this, "Email sudah digunakan", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // Simpan ke Realm
             try {
                 realm.executeTransaction(r -> {
                     User user = r.createObject(User.class, email);
@@ -101,7 +95,6 @@ public class SignupActivity extends AppCompatActivity {
 
                 Toast.makeText(this, "Signup berhasil", Toast.LENGTH_SHORT).show();
 
-                // Delay untuk memastikan toast tampil sebelum kembali ke login
                 new android.os.Handler().postDelayed(() -> {
                     finish(); // balik ke LoginActivity
                 }, 1000);
@@ -110,9 +103,6 @@ public class SignupActivity extends AppCompatActivity {
                 Toast.makeText(this, "Gagal signup: " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
-
-
-
 
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -138,10 +128,6 @@ public class SignupActivity extends AppCompatActivity {
                 toLogin();
             }
         });
-
-
-
-
     }
 
     public void toLogin(){

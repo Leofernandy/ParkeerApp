@@ -95,16 +95,15 @@ public class AddVehicleActivity extends AppCompatActivity {
             });
 
             Toast.makeText(this, "Kendaraan berhasil ditambahkan", Toast.LENGTH_SHORT).show();
-            finish(); // Kembali ke MyVehiclesActivity
+            finish();
         });
     }
 
-    // Fungsi reusable adapter dengan hint yang tidak bisa diklik
     private ArrayAdapter<CharSequence> createHintedAdapter(int arrayResId) {
         return new ArrayAdapter<CharSequence>(this, R.layout.spinner_item, getResources().getTextArray(arrayResId)) {
             @Override
             public boolean isEnabled(int position) {
-                return position != 0; // Hint (index 0) tidak bisa dipilih
+                return position != 0; // index 0 tidak bisa dipilih
             }
 
             @Override
@@ -112,7 +111,7 @@ public class AddVehicleActivity extends AppCompatActivity {
                 View view = super.getDropDownView(position, convertView, parent);
                 TextView tv = (TextView) view;
                 if (position == 0) {
-                    tv.setTextColor(Color.GRAY); // Hint style
+                    tv.setTextColor(Color.GRAY); // warna hint
                 } else {
                     tv.setTextColor(Color.BLACK);
                 }

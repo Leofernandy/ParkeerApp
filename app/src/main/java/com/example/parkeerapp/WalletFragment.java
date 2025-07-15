@@ -21,12 +21,12 @@ import com.example.parkeerapp.utils.UserSessionManager;
 
 public class WalletFragment extends Fragment {
 
-    private SharedPreferences prefs;
     private TextView txvSaldo, txvPhone;
     private ImageView imvTopup;
 
+    SharedPreferences prefs;
+
     public WalletFragment() {
-        // Required empty public constructor
     }
 
     public static WalletFragment newInstance(String param1, String param2) {
@@ -39,7 +39,6 @@ public class WalletFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Kosong karena kita tidak pakai parameter ARG
     }
 
     @Override
@@ -62,26 +61,21 @@ public class WalletFragment extends Fragment {
         txvPhone = view.findViewById(R.id.txvPhone);
         imvTopup = view.findViewById(R.id.imvTopup);
 
-        // Get current user's email
         UserSessionManager session = new UserSessionManager(requireContext());
         String email = session.getEmail();
-        String phone = session.getPhone();
+        prefs = requireContext().getSharedPreferences("wallet_" + email, Context.MODE_PRIVATE);
 
-        if (phone.length() >= 10) {
+        String phone = session.getPhone();
+        if (phone != null && phone.length() >= 10) {
             String masked = phone.substring(0, 2) + "******" + phone.substring(phone.length() - 2);
             txvPhone.setText(masked);
         } else {
-            txvPhone.setText(phone);
+            txvPhone.setText(phone != null ? phone : "-");
         }
 
-        // Use SharedPreferences with unique key per user
-        prefs = requireContext().getSharedPreferences("wallet_" + email, Context.MODE_PRIVATE);
-
-        // Tampilkan saldo saat ini
         updateBalance();
 
-        // Logic top-up saldo Rp10.000
-        imvTopup.setOnClickListener(v -> {
+        imvTopup.setOnClickListener(v1 -> {
             int currentBalance = prefs.getInt("balance", 0);
             int newBalance = currentBalance + 10000;
 
@@ -89,13 +83,17 @@ public class WalletFragment extends Fragment {
             editor.putInt("balance", newBalance);
             editor.apply();
 
+            session.setSaldo(newBalance);
+
             updateBalance();
             Toast.makeText(requireContext(), "Top-up Rp10.000 berhasil", Toast.LENGTH_SHORT).show();
         });
     }
 
+
     private void updateBalance() {
-        int balance = prefs.getInt("balance", 0);
+        UserSessionManager session = new UserSessionManager(requireContext());
+        int balance = session.getSaldo();
         txvSaldo.setText("IDR " + String.format("%,d", balance).replace(',', '.'));
     }
 }

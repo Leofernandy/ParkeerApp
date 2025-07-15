@@ -15,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.example.parkeerapp.utils.UserSessionManager;
 
 /**
@@ -25,7 +27,7 @@ import com.example.parkeerapp.utils.UserSessionManager;
 public class ProfileFragment extends Fragment {
 
     ImageView imvEditProfile;
-    LinearLayout llyMyVehicles, llyLogout;
+    LinearLayout llyMyVehicles, llyLogout , llyCS , llyHowUse , llyLanguage , llySetPin;
 
     TextView txvFullname, txvEmail, txvPhone;
 
@@ -72,7 +74,6 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_profile, container, false);
     }
 
@@ -82,6 +83,10 @@ public class ProfileFragment extends Fragment {
 
         imvEditProfile = view.findViewById(R.id.imvEditProfile);
         llyMyVehicles = view.findViewById(R.id.llyMyVehicles);
+        llyCS = view.findViewById(R.id.llyCS);
+        llySetPin = view.findViewById(R.id.llySetPin);
+        llyLanguage = view.findViewById(R.id.llyLanguage);
+        llyHowUse = view.findViewById(R.id.llyHowUse);
         llyLogout = view.findViewById(R.id.llyLogout);
         txvFullname = view.findViewById(R.id.txvFullname);
         txvEmail = view.findViewById(R.id.txvEmail);
@@ -91,10 +96,13 @@ public class ProfileFragment extends Fragment {
 
         loadProfileData();
         llyLogout.setOnClickListener(v -> logout());
+        View.OnClickListener toastListener = v -> Toast.makeText(getContext(), "Fitur ini sedang dalam proses pengembangan!", Toast.LENGTH_SHORT).show();
 
+        llySetPin.setOnClickListener(toastListener);
+        llyLanguage.setOnClickListener(toastListener);
+        llyHowUse.setOnClickListener(toastListener);
+        llyCS.setOnClickListener(toastListener);
 
-
-        // Ambil data dari SharedPreferences
         UserSessionManager session = new UserSessionManager(requireContext());
         if (session.isLoggedIn()) {
             txvFullname.setText(session.getFullname());
@@ -102,15 +110,12 @@ public class ProfileFragment extends Fragment {
             txvPhone.setText(session.getPhone());
         }
 
-
-
         imvEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 toEditProfile();
             }
         });
-
 
         llyMyVehicles.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,7 +158,6 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        // refresh data saat kembali dari edit_profile
         loadProfileData();
     }
 
@@ -164,7 +168,7 @@ public class ProfileFragment extends Fragment {
         Intent intent = new Intent(requireActivity(), LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
-        requireActivity().finishAffinity(); // Tutup semua aktivitas
+        requireActivity().finishAffinity();
     }
 
 

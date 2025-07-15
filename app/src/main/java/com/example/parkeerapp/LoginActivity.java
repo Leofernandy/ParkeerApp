@@ -13,9 +13,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.example.parkeerapp.model.SlotParkir;
 import com.example.parkeerapp.utils.UserSessionManager;
 
 import com.example.parkeerapp.model.User;
+import com.example.parkeerapp.utils.RealmSeeder;
 
 import io.realm.Realm;
 
@@ -32,22 +35,17 @@ public class LoginActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
 
-        // Inisialisasi Realm
         realm = Realm.getDefaultInstance();
 
-        // View binding
         edtEmail = findViewById(R.id.edtEmail);
         edtPassword = findViewById(R.id.edtPassword);
         btnLogin = findViewById(R.id.btnLogin);
         txvLinkSignUp = findViewById(R.id.txvLinkSignUp);
 
-        // Aksi tombol login
         btnLogin.setOnClickListener(v -> doLogin());
 
-        // Navigasi ke halaman signup
         txvLinkSignUp.setOnClickListener(v -> toSignUp());
 
-        // Adjust padding jika ada status bar / gesture bar
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -70,11 +68,8 @@ public class LoginActivity extends AppCompatActivity {
                 .findFirst();
 
 
-
         if (user != null) {
             Log.d("DEBUG", "User login: " + user.getEmail());
-
-            // Simpan data user ke SharedPreferences
             UserSessionManager session = new UserSessionManager(this);
             session.createLoginSession(
                     user.getEmail(),
@@ -82,17 +77,22 @@ public class LoginActivity extends AppCompatActivity {
                     user.getPhone(),
                     user.getPassword()
             );
+            session.syncSaldoFromWallet(this);
+
+            int mallId = 1;
+            if (realm.where(SlotParkir.class).equalTo("mallId", mallId).findAll().isEmpty()) {
+                RealmSeeder.seedSlotData(realm, mallId);
+            }
 
             Toast.makeText(this, "Login berhasil", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish();
-        }
-        else {
+        } else {
             Toast.makeText(this, "Email atau password salah", Toast.LENGTH_SHORT).show();
+            Log.d("DEBUG", "Login gagal: user tidak ditemukan di Realm");
         }
     }
-
-    private void toSignUp() {
+        private void toSignUp() {
         startActivity(new Intent(this, SignupActivity.class));
     }
 

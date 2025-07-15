@@ -30,8 +30,6 @@ import io.realm.RealmResults;
 public class MyVehiclesActivity extends AppCompatActivity {
 
     ImageView btnAdd, imvLeftArrow;
-    TextView txvEditVehicle;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +60,6 @@ public class MyVehiclesActivity extends AppCompatActivity {
 
         UserSessionManager session = new UserSessionManager(this);
         String email = session.getEmail();
-        Log.d("SESSION", "Email dari session: " + email);
 
         realm.executeTransaction(r -> {
             realm.where(Vehicle.class)
@@ -79,8 +76,6 @@ public class MyVehiclesActivity extends AppCompatActivity {
 
 
         List<Vehicle> filteredList = realm.copyFromRealm(vehicles);
-
-        System.out.println("DEBUG_VEHICLE_COUNT: " + filteredList.size());
 
         com.example.parkeerapp.adapter.VehicleAdapter adapter = new com.example.parkeerapp.adapter.VehicleAdapter(this, filteredList);
         listView.setAdapter(adapter);
@@ -115,6 +110,5 @@ public class MyVehiclesActivity extends AppCompatActivity {
         ListView listView = findViewById(R.id.listVehicles);
         listView.setAdapter(adapter);
 
-        System.out.println("DEBUG_REFRESH_VEHICLE_COUNT: " + filteredList.size());
     }
 }

@@ -1,54 +1,39 @@
 package com.example.parkeerapp;
 
+import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
+import com.example.parkeerapp.model.Booking;
+import com.example.parkeerapp.utils.UserSessionManager;
+
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link HistoryFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import io.realm.Realm;
+import io.realm.RealmResults;
+
 public class HistoryFragment extends Fragment {
+
     private ListView listView;
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private Realm realm;
+    private UserSessionManager session;
 
     public HistoryFragment() {
-        // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HistoryFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static HistoryFragment newInstance(String param1, String param2) {
         HistoryFragment fragment = new HistoryFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString("param1", param1);
+        args.putString("param2", param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,10 +41,8 @@ public class HistoryFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        realm = Realm.getDefaultInstance();
+        session = new UserSessionManager(requireContext());
     }
 
     @Nullable
@@ -70,15 +53,51 @@ public class HistoryFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_history, container, false);
         listView = view.findViewById(R.id.listHistory);
 
-        // Dummy data buat ngetes layout
-        List<String> dummyData = new ArrayList<>();
-        dummyData.add("History 1");
-        dummyData.add("History 2");
-        dummyData.add("History 3");
-
-        HistoryAdapter adapter = new HistoryAdapter(requireContext(), dummyData);
-        listView.setAdapter(adapter);
+        loadHistoryFromRealm();
 
         return view;
+    }
+
+    private void loadHistoryFromRealm() {
+        String email = session.getEmail();
+        RealmResults<Booking> results = realm.where(Booking.class)
+                .equalTo("userEmail", email)
+                .equalTo("expired", true) // hanya booking yang sudah expired
+                .sort("jamMasuk", io.realm.Sort.DESCENDING)
+                .findAll();
+
+
+        List<Booking> bookingList = new ArrayList<>(results); // convert ke list biasa
+
+        HistoryAdapter adapter = new HistoryAdapter(requireContext(), bookingList);
+        listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            Booking selected = bookingList.get(position);
+
+            Intent intent = new Intent(requireContext(), BookDetailsActivity.class);
+            intent.putExtra("readonly", true);
+            intent.putExtra("bookingId", selected.getBookingId());
+            intent.putExtra("mallName", selected.getMallName());
+            intent.putExtra("mallAddress", selected.getMallAddress());
+            intent.putExtra("slot", selected.getSlot());
+            intent.putExtra("plate", selected.getPlate());
+            intent.putExtra("jamMasuk", selected.getJamMasuk());
+            intent.putExtra("jamKeluar", selected.getJamKeluar());
+            intent.putExtra("durasiMenit", selected.getDurasiMenit());
+            intent.putExtra("totalHarga", selected.getTotalHarga());
+
+            startActivity(intent);
+        });
+
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (realm != null && !realm.isClosed()) {
+            realm.close();
+        }
     }
 }

@@ -13,8 +13,6 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class PaymentSuccessActivity extends AppCompatActivity {
 
-    Button btnBookDetail;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,12 +24,19 @@ public class PaymentSuccessActivity extends AppCompatActivity {
             return insets;
         });
 
-        btnBookDetail = findViewById(R.id.btnBookDetail);
-        btnBookDetail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toBookingDetails();
-            }
+        Button btnBookDetail = findViewById(R.id.btnBookDetail);
+        btnBookDetail.setOnClickListener(v -> {
+            Intent intent = new Intent(PaymentSuccessActivity.this, BookDetailsActivity.class);
+            intent.putExtra("bookingId", getIntent().getStringExtra("bookingId"));
+            intent.putExtra("mallName", getIntent().getStringExtra("mallName"));
+            intent.putExtra("mallAddress", getIntent().getStringExtra("mallAddress"));
+            intent.putExtra("slot", getIntent().getStringExtra("slot"));
+            intent.putExtra("plate", getIntent().getStringExtra("plate"));
+            intent.putExtra("jamMasuk", getIntent().getStringExtra("jamMasuk"));
+            intent.putExtra("jamKeluar", getIntent().getStringExtra("jamKeluar"));
+            intent.putExtra("totalHarga", getIntent().getIntExtra("totalHarga", 0));
+            intent.putExtra("durasiMenit", getIntent().getLongExtra("durasiMenit", 0));
+            startActivity(intent);
         });
     }
 
