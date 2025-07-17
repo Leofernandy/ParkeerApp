@@ -4,7 +4,6 @@
 
 <div align="center">
 <a href="https://youtu.be/0DgMbbMePc4" target="blank">
-<img src="./assets/chatBot.png" width="90" alt="Logo" />
 </a>
 
 <h2>Parkeer</h2>
@@ -66,7 +65,7 @@ No external server required. Just clone the repository, open in Android Studio, 
 1. **Clone the repository:**
 
 ```bash
-git clone https://github.com/Leofernandy/parkeer-app.git
+git clone https://github.com/Leofernandy/ParkeerApp.git
 ```
 
 2. **Open in Android Studio**
