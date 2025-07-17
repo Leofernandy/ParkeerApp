@@ -66,7 +66,7 @@ No external server required. Just clone the repository, open in Android Studio, 
 1. **Clone the repository:**
 
 ```bash
-git clone https://github.com/your-username/parkeer-app.git
+git clone https://github.com/Leofernandy/parkeer-app.git
 ```
 
 2. **Open in Android Studio**
@@ -75,10 +75,18 @@ git clone https://github.com/your-username/parkeer-app.git
 
 ## 🔄 Usage
 
-* Choose a mall from HomeFragment
-* Fill the form with vehicle, time, and slot
-* Confirm booking
-* View booking details in ActivityFragment
+1. **Add Your Vehicle**
+Go to the My Vehicles tab in the Profile section and add your vehicle details (plate number, brand, model, year, and color).
+2. **Top Up Wallet**
+Tap the three dots menu in the Wallet Card to add IDR 10,000 to your wallet balance per click.
+3. **Choose a Mall**
+Navigate to the Home tab and select your preferred mall.
+4. **Book a Parking Slot**
+Fill out the booking form by selecting your vehicle, entry and exit times, and an available parking slot.
+5. **Confirm Your Booking**
+Review the details and confirm the booking to secure your slot.
+6. **View Booking Details**
+Access your booking history and details from the Activity tab, including barcode, booking ID, slot info, and payment summary.
 
 ## 🚑 Issues
 
