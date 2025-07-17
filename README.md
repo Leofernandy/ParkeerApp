@@ -3,13 +3,11 @@
 </div>
 
 <div align="center">
-<a href="https://github.com/Sumonta056/FixHub-Issue-Tracker-Website" target="blank">
-<img src="./assets/chatBot.png" width="90" alt="Logo" />
 </a>
 
 <h2> Parkeer </h2>
 
-<img src ="./assets/bg-3.webp" width="80%">
+<img src ="./assets/bg_parkeer.png" width="80%">
 
 </div>
 
